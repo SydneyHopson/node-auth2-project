@@ -1,6 +1,6 @@
 const db = require('../../data/db-config.js');
 
-function find() {
+  function find() {
   /**
     You will need to join two tables.
     Resolves to an ARRAY with all users.
@@ -18,6 +18,9 @@ function find() {
       }
     ]
    */
+  return db('users')
+      .join('roles', 'users.role_id', 'roles.role_id')
+      .select('user_id', 'username', 'role_name')
 }
 
 function findBy(filter) {
@@ -34,9 +37,13 @@ function findBy(filter) {
       }
     ]
    */
+  return db('users')
+        .join('roles', 'users.role_id', 'roles.role_id')
+        .select('user_id', 'username', 'password','role_name')
+        .where(filter)
 }
 
-function findById(user_id) {
+  function findById(user_id) {
   /**
     You will need to join two tables.
     Resolves to the user with the given user_id.
@@ -47,6 +54,10 @@ function findById(user_id) {
       "role_name": "instructor"
     }
    */
+  return db('users')
+        .join('roles', 'users.role_id', 'roles.role_id')
+        .select('user_id', 'username', 'role_name')
+        .where('users.user_id', user_id).first()
 }
 
 /**
@@ -81,7 +92,7 @@ async function add({ username, password, role_name }) { // done for you
     const [user_id] = await trx('users').insert({ username, password, role_id: role_id_to_use })
     created_user_id = user_id
   })
-  return findById(created_user_id)
+return findById(created_user_id)
 }
 
 module.exports = {
